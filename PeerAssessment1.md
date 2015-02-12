@@ -45,27 +45,14 @@ daily_steps <- aggregate(steps ~ date, data = dat, FUN = sum)
 hist(daily_steps$steps, main = "", xlab = "Daily steps", col = "red")
 ```
 
-![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2-1.png) 
+![plot of chunk firsthistogram](figure/firsthistogram-1.png) 
 
 ```r
 daily_mean <- mean(daily_steps$steps)
 daily_median <- median(daily_steps$steps)
-daily_mean
 ```
 
-```
-## [1] 10766.19
-```
-
-```r
-daily_median
-```
-
-```
-## [1] 10765
-```
-
-The mean number of steps taken per day is 10,766. The median number of steps taken per day is 10,765.
+The mean number of steps taken per day is 1.0766189 &times; 10<sup>4</sup>. The median number of steps taken per day is 1.0765 &times; 10<sup>4</sup>.
 
 ## What is the average daily activity pattern?  
 
@@ -76,15 +63,10 @@ interval_steps <- aggregate(steps ~ interval, data = dat, FUN = mean, na.action=
 plot(interval_steps$interval, interval_steps$steps, type="l", xlab= "5-minute interval", ylab= "Average number of steps taken", main = "Daily activity pattern")
 ```
 
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png) 
+![plot of chunk firstlineplot](figure/firstlineplot-1.png) 
 
 ```r
-interval_steps[which.max(interval_steps$steps), ]
-```
-
-```
-##     interval    steps
-## 104      835 206.1698
+max_interval <- interval_steps[which.max(interval_steps$steps), ]$interval
 ```
 The five-minute interval with the greatest daily activity, on average accross all days in the dataset, is 835.
 
@@ -92,13 +74,9 @@ The five-minute interval with the greatest daily activity, on average accross al
 
 
 ```r
-length(which(is.na(dat$steps)))
+missing <- length(which(is.na(dat$steps)))
 ```
-
-```
-## [1] 2304
-```
-There are 2,304 missing values. I will impute these with the mean value for the corresponding invterval accross all days.
+There are 2304 missing values. I will impute these with the mean value for the corresponding invterval accross all days.
 
 
 ```r
@@ -118,30 +96,19 @@ hist(daily_steps$steps, main = "", xlab = "Daily steps", col = "red", add = T)
 legend("topright", c("Imputed", "Original"), col = c("blue", "red"), lwd=10)
 ```
 
-![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6-1.png) 
+![plot of chunk secondhistogram](figure/secondhistogram-1.png) 
 
 ```r
 imputed_mean <- mean(impute_daily_steps$steps)
 imputed_median <- median(impute_daily_steps$steps)
 
-imputed_mean - daily_mean
+mean_difference <- imputed_mean - daily_mean
+median_difference <- imputed_median - daily_median
 ```
 
-```
-## [1] 0
-```
+The mean steps per day with the imputed data is 1.0766189 &times; 10<sup>4</sup> steps. The median steps per day with the imputed data is also 1.0766189 &times; 10<sup>4</sup>.  
 
-```r
-imputed_median - daily_median
-```
-
-```
-## [1] 1.188679
-```
-
-The mean steps per day with the imputed data is 10,766 steps. The median steps per day with the imputed data is also 10,766.  
-
-The mean value with the imputed data is the exact same, while the median value is very similar (only about 1 step more daily).  
+The mean value with the imputed data is the exact same (a difference of 0), while the median value is very similar (only 1.1886792 steps more daily).  
 
 Imputing data introduced a large number of average values, which is reflected in the histograms central growth. The impact on estimates of total daily steps was negligible because imputing average values accross all intervals only serves to revert the total to the mean. The median for imputed values was slightly higher because median is a counting value rather than a mathematical calculation.  
 
@@ -164,7 +131,7 @@ plot(weekdays_steps$interval, weekdays_steps$steps, type="l", xlab= "5-minute in
 plot(weekends_steps$interval, weekends_steps$steps, type="l", xlab= "5-minute interval", ylab= "Steps taken", main = "Weekends", col="orange")
 ```
 
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7-1.png) 
+![plot of chunk secondlineplot](figure/secondlineplot-1.png) 
 
 
 
